@@ -4,18 +4,14 @@ from stable_baselines3 import SAC
 from stable_baselines3.common.env_checker import check_env
 import numpy as np
 
-# Convert CartPole to a custom continuous environment for SAC
+# Converting CartPoleEnv to SAC Implementation
 class ContinuousCartPoleEnv(gym.Env):
     def __init__(self):
         super(ContinuousCartPoleEnv, self).__init__()
         
-        # Initialize the CartPole environment
+        # CartPole env init
         self.env = gym.make("CartPole-v1", render_mode="human")
-        
-        # Convert the action space from discrete to continuous
-        self.action_space = spaces.Box(low=-1, high=1, shape=(1,), dtype=np.float32)
-        
-        # Observation space remains the same as CartPole's
+        self.action_space = spaces.Box(low=-1, high=1, shape=(1,), dtype=np.float32) # Discrete to Continuous Action Space
         self.observation_space = self.env.observation_space
 
     def reset(self, seed=None, options=None):
@@ -34,19 +30,17 @@ class ContinuousCartPoleEnv(gym.Env):
         return obs, reward, done, truncated, info
 
     def render(self, mode="human"):
-        # Render the environment
         self.env.render()
 
     def close(self):
         self.env.close()
 
-# Create the custom continuous CartPole environment
+# Continuous Env
 env = ContinuousCartPoleEnv()
 
-# Check the custom environment for compatibility with Gym (optional but recommended)
-check_env(env)
+check_env(env) # Sanity check for continuous env compatibility with gymnasium
 
-# Initialize the SAC model with a continuous environment
+# Initialize the SAC model with a continuous env
 model = SAC(
     "MlpPolicy", 
     env, 
@@ -57,12 +51,13 @@ model = SAC(
     gamma=0.99            # Discount factor close to 1 for longer-term reward focus
 )
 
-# Define the total training steps and interval for periodic evaluation
+# Define the total training steps
 total_timesteps = 20000
+# Define interval for periodic evaluation
 evaluation_interval = 1000
 num_eval_episodes = 10
 
-# Open the time log file to record episode durations
+# Open time log file for recording episode durations
 with open("time_log.txt", "w") as log_file:
     log_file.write("Training Step, Episode, Duration (Timesteps), Total Reward\n")  # Write header
 
@@ -92,5 +87,4 @@ with open("time_log.txt", "w") as log_file:
                     log_file.flush()  # Write data immediately to the file
                     break
 
-# Close the environment
-env.close()
+env.close() # Close environment once test is complete

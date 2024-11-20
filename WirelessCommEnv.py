@@ -39,12 +39,12 @@ class WirelessNetworkEnv:
 # Next implementation steps
 
 # SAC implementation in PyTorch
-class SACAgent:
-    def __init__(self, state_dim, action_dim):
-        pass
     # Policy Network
     # Q Network
     # SAC Agent
+class SACAgent:
+    def __init__(self, state_dim, action_dim):
+        pass
 
 # Training the SAC agent
 env = WirelessNetworkEnv()
